@@ -52,7 +52,7 @@ func (t *Transaction) isValid() error {
 		return errors.New("invalid status for the transaction")
 	}
 
-	if t.PixKeyTo.AccountID == t.AccountFrom.ID {
+	if t.PixKeyTo.AccountID == t.AccountFromID {
 		return errors.New("the source and destination account cannot be the same")
 	}
 
@@ -64,14 +64,7 @@ func (t *Transaction) isValid() error {
 
 func (t *Transaction) Complete() error {
 	t.Status = TransactionCompleted
-	t.UpdateAt = time.Now()
-	err := t.isValid()
-	return err
-}
-
-func (t *Transaction) Confirm() error {
-	t.Status = TransactionConfirmed
-	t.UpdateAt = time.Now()
+	t.UpdatedAt = time.Now()
 	err := t.isValid()
 	return err
 }
@@ -79,19 +72,20 @@ func (t *Transaction) Confirm() error {
 func (t *Transaction) Cancel(description string) error {
 	t.Status = TransactionError
 	t.CancelDescription = description
-	t.UpdateAt = time.Now()
+	t.UpdatedAt = time.Now()
 	err := t.isValid()
 	return err
 }
 
 func NewTransaction(accountFrom *Account, amount float64, pixKeyTo *PixKey, description string, id string) (*Transaction, error) {
 	transaction := Transaction{
-		AccountFrom: accountFrom,
-		Amount:      amount,
-		PixKeyTo:    pixKeyTo,
-		PixKeyIdTo:  pixKeyTo.ID,
-		Status:      TransactionPending,
-		Description: description,
+		AccountFrom:   accountFrom,
+		AccountFromID: accountFrom.ID,
+		Amount:        amount,
+		PixKeyTo:      pixKeyTo,
+		PixKeyIdTo:    pixKeyTo.ID,
+		Status:        TransactionPending,
+		Description:   description,
 	}
 	if id == "" {
 		transaction.ID = uuid.NewV4().String()
