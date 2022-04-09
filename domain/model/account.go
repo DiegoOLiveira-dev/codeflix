@@ -7,17 +7,16 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func init() {
-	govalidator.SetFieldsRequiredByDefault(true)
-}
-
 type Account struct {
 	Base      `valid:"required"`
 	OwnerName string    `json:"owner_name" valid:"notnull"`
 	Bank      *Bank     `valid:"-"`
-	BankID    string    `type:uuid;not null" valid:"-"`
 	Number    string    `json:"number" valid:"notnull"`
 	PixKeys   []*PixKey `valid:"-"`
+}
+
+func init() {
+	govalidator.SetFieldsRequiredByDefault(true)
 }
 
 func (account *Account) isValid() error {
@@ -31,7 +30,6 @@ func (account *Account) isValid() error {
 func NewAccount(bank *Bank, number string, ownerName string) (*Account, error) {
 	account := Account{
 		Bank:      bank,
-		BankID:    bank.ID,
 		Number:    number,
 		OwnerName: ownerName,
 	}

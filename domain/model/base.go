@@ -7,11 +7,11 @@ import (
 )
 
 func init() {
-	govalidator.SetFieldRequiredByDefault(true)
+	govalidator.SetFieldsRequiredByDefault(true)
 }
 
 type Base struct {
-	ID        string    `json:id valid:"uuid"`
-	CreatedAt time.Time `json:updated_at valid:"-"`
-	UpdateAt  time.Time `json:created_at valid:"-"`
+	ID        string    `json:"id" valid:"uuid"`
+	CreatedAt time.Time `json:"updated_at" valid:"-"`
+	UpdateAt  time.Time `json:"created_at" valid:"-"`
 }
